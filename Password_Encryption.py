@@ -3,6 +3,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.fernet import Fernet
 import base64, os
+import hashlib
 
 # This is a function that will derive the key in real time. This is so that the key won't have to be stored in a datatable as that is very unsecure.
 def derive_key(user_password, salt):
@@ -30,6 +31,9 @@ def decrypt_data(data_to_decrypt, key):
 def create_random_salt():
     salt = os.urandom(16)
     return salt.hex()
+
+def hash_password(password):
+    pass
 
 #print(create_random_salt())
 
