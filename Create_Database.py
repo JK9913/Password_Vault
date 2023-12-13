@@ -76,7 +76,7 @@ def check_master_password(name_of_database):
     cursor.execute(f"SHOW TABLES")
     tables = cursor.fetchall()
 
-    if not "masterPassword" in str(tables): 
+    if not "masterpassword" in str(tables): 
         # Create the table for the master password
         cursor.execute(f"CREATE TABLE IF NOT EXISTS masterPassword(id INT AUTO_INCREMENT PRIMARY KEY,password_hash VARCHAR(128) NOT NULL);")
 
@@ -85,5 +85,42 @@ def check_master_password(name_of_database):
         print("Table exists")
         return True
 
-def write_master_password(password):
-    pass
+
+def write_master_password(password_hashed):
+    try:
+        cursor.execute("USE passwordVault")
+    except:
+        print("Already using passwordVault")
+
+    # Put the hashed password into the table, we use a variable holding the query, and sanitize it
+    query_for_inserting = "INSERT INTO masterPassword (password_hash) VALUES (%s)"
+    cursor.execute(query_for_inserting, (password_hashed,))
+    print(cursor.fetchall())
+        
+    # Save changes to the table
+    conn.commit()
+
+
+def get_master_password():
+    try:
+        cursor.execute("USE passwordVault")
+    except:
+        print("Already using passwordVault")
+
+    cursor.execute("SELECT password_hash FROM masterPassword")
+
+    master_password_hashed = cursor.fetchall()
+
+    return master_password_hashed
+
+def write_to_vault(values):
+    try:
+        cursor.execute("USE passwordVault")
+    except:
+        print("Already using passwordVault")
+    
+    query = "INSERT INTO uservault (websiteURL, username, password_salt, password_cipher) (%s, %s, %s, %s)"
+
+    cursor.execute(query, values)
+
+    conn.commit()

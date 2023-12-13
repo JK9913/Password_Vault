@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 import Password_Encryption as Encryption
 import Create_Database as db
+import login
 
 # This is where the main window is created
 app_window = tk.Tk()
@@ -27,13 +28,13 @@ def create_table(window):
 
 # SAMPLE DATA
 
-# data = [
-# ("https://www.VG.no", "Test_User1", "pass123")
-# ]
+    data = [
+    ("https://www.VG.no", "Test_User1", "pass123")
+    ]
 
-# for row in data:
-# masked_password = "*" * len(row[2])
-# tree.insert("", "end", values=(row[0], row[1], masked_password))
+    for row in data:
+        masked_password = "*" * len(row[2])
+        tree.insert("", "end", values=(row[0], row[1], masked_password))
 
     # Center table
     tree.pack(expand=True, fill="both", pady=(20), padx=20)
@@ -55,7 +56,6 @@ def on_button_click(tree):
     url_label.pack()
     url = tk.Entry(creation_window)
     url.pack()
-    print(url.get())
     
     
 
@@ -92,7 +92,12 @@ def on_button_click(tree):
 def append_to_table(array_of_values, tree, popUp):
     popUp.destroy()
 
-    # Encrypting password here
+    # Encrypting password here, first create a salt, then derive the key, lastly encrypt.
+    random_salt = Encryption.create_random_salt()
+    key = Encryption.derive_key(db.get_master_password(), random_salt) 
+    encrypted_data = Encryption.encrypt_data(array_of_values[0][2],key)
+
+    db.write_to_vault((array_of_values[0][0],array_of_values[0][1],random_salt,encrypted_data))
 
 
     print(array_of_values)
@@ -102,15 +107,6 @@ def append_to_table(array_of_values, tree, popUp):
 
 
 
-
-# 
-
-
-
-
-
-# Lets create and add the table to the window
-create_table(app_window)
 
 
 # First we check for database, will return true or false
@@ -122,8 +118,14 @@ else:
     db.create_database("passwordVault")
     db.create_table("passwordVault","uservault")
 
-data_from_password_vault = db.get_data("passwordVault")
+login_success = login.login_window()
 
 
-# Loop to start the application and keep it running
-app_window.mainloop()
+if login_success:
+    # Get passwordVault data from database
+    data_from_password_vault = db.get_data("passwordVault")
+    # Lets create and add the table to the window
+    create_table(app_window)
+
+    # Loop to start the application and keep it running
+    app_window.mainloop()

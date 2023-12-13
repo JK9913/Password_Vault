@@ -33,7 +33,10 @@ def create_random_salt():
     return salt.hex()
 
 def hash_password(password):
-    pass
+    password_encode = password.encode("utf-8")
+    password_hash = hashlib.sha256(password_encode).hexdigest()
+
+    return password_hash
 
 #print(create_random_salt())
 
