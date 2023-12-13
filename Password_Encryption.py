@@ -38,13 +38,4 @@ def hash_password(password):
 
     return password_hash
 
-#print(create_random_salt())
-
-#hidden_data = "Testing"
-#key = derive_key('Password123',b'12ffrgssdf21')
-
-#print(f"Original data: {hidden_data}")
-#print(f"Encrypted ciphertext: {encrypt_data(hidden_data, key)}")
-#print("Decrypted data: " + decrypt_data(encrypt_data(hidden_data, key), key))
-
 

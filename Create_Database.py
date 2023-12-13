@@ -133,10 +133,9 @@ def get_values_from_database():
     except:
         print("Already using passwordVault")
 
-    cursor.execute(f"SELECT websiteURL, username, password_cipher, password_salt FROM uservault")
+    cursor.execute(f"SELECT websiteURL, username, password_salt, password_cipher FROM uservault")
 
     values_from_database = cursor.fetchall()
 
     return values_from_database
 
-get_values_from_database()

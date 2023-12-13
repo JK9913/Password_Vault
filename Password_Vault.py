@@ -26,15 +26,20 @@ def create_table(window):
     # Since there is an empty column first, we remove this
     tree.column("#0", width=0, stretch=tk.NO)
 
-# SAMPLE DATA
 
-    data = [
-    ("https://www.VG.no", "Test_User1", "pass123")
-    ]
+    # Get data from password vault
+    data = db.get_values_from_database()
+     
 
     for row in data:
-        masked_password = "*" * len(row[2])
-        tree.insert("", "end", values=(row[0], row[1], masked_password))
+        # Create a key using each random salt
+        key = Encryption.derive_key(db.get_master_password()[0][0],bytes.fromhex(row[2]))
+
+        url = row[0]
+        username = row[1]
+        password = Encryption.decrypt_data(bytes.fromhex(row[3]), key)
+
+        tree.insert("", "end", values=(url, username, password))
 
     # Center table
     tree.pack(expand=True, fill="both", pady=(20), padx=20)
@@ -98,12 +103,9 @@ def append_to_table(array_of_values, tree, popUp):
     encrypted_data = Encryption.encrypt_data(array_of_values[0][2],key)
 
     db.write_to_vault((array_of_values[0][0],array_of_values[0][1],random_salt.hex(),encrypted_data.hex()))
-
-
-    # print(array_of_values)
-    # for row in array_of_values:
-    #     masked_password = "*" * len(row[2])
-    #     tree.insert("", "end", values=(row[0], row[1], masked_password))
+    
+    for row in array_of_values:
+         tree.insert("", "end", values=(row[0], row[1], row[2]))
 
 
 
