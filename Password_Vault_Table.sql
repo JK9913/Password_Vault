@@ -5,5 +5,5 @@ CREATE TABLE IF NOT EXISTS `userVault` (
     `websiteURL` VARCHAR(60),
     `username` VARCHAR(25) NOT NULL,
     `password_salt` VARCHAR(64) NOT NULL,
-    `password_cipher` VARCHAR(64) NOT NULL
+    `password_cipher` VARCHAR(256) NOT NULL
 );

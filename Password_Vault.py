@@ -94,16 +94,16 @@ def append_to_table(array_of_values, tree, popUp):
 
     # Encrypting password here, first create a salt, then derive the key, lastly encrypt.
     random_salt = Encryption.create_random_salt()
-    key = Encryption.derive_key(db.get_master_password(), random_salt) 
+    key = Encryption.derive_key(db.get_master_password()[0][0], random_salt) 
     encrypted_data = Encryption.encrypt_data(array_of_values[0][2],key)
 
-    db.write_to_vault((array_of_values[0][0],array_of_values[0][1],random_salt,encrypted_data))
+    db.write_to_vault((array_of_values[0][0],array_of_values[0][1],random_salt.hex(),encrypted_data.hex()))
 
 
-    print(array_of_values)
-    for row in array_of_values:
-        masked_password = "*" * len(row[2])
-        tree.insert("", "end", values=(row[0], row[1], masked_password))
+    # print(array_of_values)
+    # for row in array_of_values:
+    #     masked_password = "*" * len(row[2])
+    #     tree.insert("", "end", values=(row[0], row[1], masked_password))
 
 
 

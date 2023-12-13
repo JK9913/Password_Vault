@@ -30,7 +30,7 @@ def decrypt_data(data_to_decrypt, key):
 
 def create_random_salt():
     salt = os.urandom(16)
-    return salt.hex()
+    return salt
 
 def hash_password(password):
     password_encode = password.encode("utf-8")

@@ -113,14 +113,30 @@ def get_master_password():
 
     return master_password_hashed
 
+
 def write_to_vault(values):
     try:
         cursor.execute("USE passwordVault")
     except:
         print("Already using passwordVault")
     
-    query = "INSERT INTO uservault (websiteURL, username, password_salt, password_cipher) (%s, %s, %s, %s)"
+    query = "INSERT INTO uservault (websiteURL, username, password_salt, password_cipher) VALUES (%s, %s, %s, %s)"
 
     cursor.execute(query, values)
 
     conn.commit()
+
+
+def get_values_from_database():
+    try:
+        cursor.execute("USE passwordVault")
+    except:
+        print("Already using passwordVault")
+
+    cursor.execute(f"SELECT websiteURL, username, password_cipher, password_salt FROM uservault")
+
+    values_from_database = cursor.fetchall()
+
+    return values_from_database
+
+get_values_from_database()
